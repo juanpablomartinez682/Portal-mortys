@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Portal Mortys — Español Latino V4</title>
+<style>
+*{box-sizing:border-box} body{margin:0;background:#10131b;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center}
+.game{width:100%;max-width:480px;min-height:100vh;padding:28px 22px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(circle at 50% 25%,#263b2e 0,#151b20 35%,#0b0e14 80%)}
+.logo{text-align:center;margin-top:35px}.logo h1{font-size:42px;line-height:.9;margin:0;color:#9cff57;text-shadow:0 0 18px #69ff4c88}.logo p{margin:12px 0;color:#aeb7bf;letter-spacing:3px;font-size:12px}
+.portal{width:190px;height:190px;margin:25px auto;border-radius:50%;border:7px solid #75ff4f;box-shadow:0 0 20px #75ff4f, inset 0 0 30px #75ff4f;background:radial-gradient(circle,#d7fff0 0 7%,#67ffd0 10%,#168f86 30%,#153b43 65%,#091015 70%);animation:pulse 2s infinite}
+@keyframes pulse{50%{transform:scale(1.04);box-shadow:0 0 38px #75ff4f,inset 0 0 35px #75ff4f}}
+.buttons{display:grid;gap:13px;margin-bottom:25px}.btn{border:0;border-radius:14px;padding:17px;font-size:18px;font-weight:bold;color:#10130f;background:#9cff57;box-shadow:0 5px 0 #4b9c2b}.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #4b9c2b}.secondary{background:#222a31;color:#e8eef0;box-shadow:0 5px 0 #11161a}.footer{text-align:center;color:#59636a;font-size:11px}
+#screen{display:none;position:fixed;inset:0;background:#10131b;color:white;padding:30px 22px;z-index:5;overflow:auto}.back{background:#222a31;border:0;color:white;padding:10px 15px;border-radius:10px}.card{margin-top:20px;padding:18px;border-radius:18px;background:#1b2329;border:1px solid #36434b}
+.fight{border:0;border-radius:8px;padding:8px 12px;background:#ffcc66;font-weight:bold;margin-left:5px}
+.battle{background:linear-gradient(160deg,#253a42,#111820);border-radius:18px;padding:16px;margin-top:12px}.arena{display:flex;justify-content:space-between;gap:12px}.fighter{flex:1;text-align:center;background:#1c2930;border-radius:14px;padding:14px}.monster{font-size:55px}.hp{height:12px;background:#343b3d;border-radius:10px;overflow:hidden;margin:8px 0}.hp i{display:block;height:100%;width:100%;background:#9cff57}.battlelog{min-height:45px;margin:12px 0;padding:10px;background:#0c1115;border-radius:10px;color:#d7e0e3}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions button{border:0;border-radius:10px;padding:13px;font-weight:bold;background:#9cff57}.actions .dark{background:#2b353b;color:#fff}
+.morty-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.morty-card{background:#182126;border:1px solid #33434b;border-radius:14px;padding:13px}.morty-icon{font-size:42px;text-align:center}.rarity{font-size:11px;letter-spacing:1px;color:#9cff57}.stat{font-size:12px;color:#c7d0d4;margin-top:5px}.xp{height:7px;background:#343b3d;border-radius:8px;overflow:hidden;margin-top:7px}.xp i{display:block;height:100%;width:35%;background:#73d8ff}
+#map{height:430px;margin-top:15px;border-radius:18px;position:relative;overflow:hidden;background:linear-gradient(135deg,#49634c,#304936 45%,#65735a);border:3px solid #607667}
+.road{position:absolute;background:#4a4e4a;box-shadow:inset 0 0 0 3px #696d67}.r1{width:120%;height:58px;top:75px;left:-10%;transform:rotate(12deg)}.r2{width:60px;height:120%;left:55%;top:-10%;transform:rotate(-20deg)}.r3{width:100%;height:42px;bottom:95px;left:0;transform:rotate(-7deg)}
+.player{position:absolute;left:48%;top:49%;font-size:34px;filter:drop-shadow(0 2px 2px #000);z-index:2}
+.spawn,.portalSpawn{position:absolute;border:0;border-radius:50%;width:52px;height:52px;font-size:27px;background:#b9ff8c;box-shadow:0 0 18px #8cff62;z-index:3}.s1{left:20%;top:25%}.s2{right:15%;bottom:24%}.portalSpawn{right:12%;top:18%;background:#6ffff0;box-shadow:0 0 25px #45fff0}
+.hud{position:absolute;left:12px;top:12px;background:#111c19dd;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.5}.catch{border:0;border-radius:8px;padding:8px 12px;background:#9cff57;font-weight:bold}
+
+.collection-screen{padding:18px 12px 28px}
+.collection-head{display:flex;align-items:center;gap:10px;position:relative;margin-bottom:15px}
+.collection-head h2{margin:0;font-size:25px;flex:1}
+.collection-count{background:#27333a;border-radius:18px;padding:7px 12px;font-weight:800}
+.backbtn{background:#27333a;color:#fff;border:0;border-radius:12px;padding:10px 13px;font-weight:800}
+.active-panel{background:linear-gradient(145deg,#23363d,#182128);border:2px solid #8cff55;border-radius:18px;padding:15px;margin-bottom:18px}
+.active-title{font-weight:900;letter-spacing:.5px;margin-bottom:10px}
+.active-body{display:flex;gap:15px;align-items:center}
+.big-icon{font-size:72px;min-width:82px;text-align:center}
+.active-info{flex:1}
+.active-info h3{font-size:24px;margin:0 0 4px}
+.level{font-weight:800;margin:7px 0}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-weight:800;margin:8px 0}
+.section-title{margin:12px 2px}
+.collection-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.collection-card{background:#202b32;color:#fff;border:2px solid #33434b;border-radius:16px;padding:12px;text-align:left}
+.collection-card.selected{border-color:#8cff55;box-shadow:0 0 0 1px #8cff55}
+.card-top{display:flex;justify-content:space-between;align-items:center;font-size:38px}
+.card-top b{font-size:10px;background:#8cff55;color:#142014;padding:5px 7px;border-radius:8px}
+.collection-card h3{font-size:16px;margin:5px 0}
+.rarity{font-size:12px;opacity:.8}
+.mini-level{font-weight:800;margin:8px 0 4px}
+.mini-stats{font-size:11px;font-weight:800}
+.xp-label{font-size:11px;margin-top:8px;font-weight:700}
+
+
+/* V7 */
+.btn{cursor:pointer}.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.pill{background:#202b32;border:1px solid #394950;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.menu-grid button{min-height:66px}
+.panel{background:#1b242b;border:1px solid #34434a;border-radius:16px;padding:14px;margin:10px 0}
+.small{font-size:12px;opacity:.82}.gold{color:#ffd75a}.green{color:#9cff57}
+.energy{height:9px;background:#303b40;border-radius:99px;overflow:hidden}.energy i{display:block;height:100%;background:#67d9ff}
+.quest{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #2c383e}.quest:last-child{border-bottom:0}
+.quest button,.tiny{padding:7px 9px;border-radius:9px;border:0;background:#9cff57;font-weight:800}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shop-item{background:#202b32;border:1px solid #34434a;border-radius:14px;padding:12px}
+.map-controls{display:flex;gap:8px;margin:10px 0}.map-controls button{flex:1}
+.location{font-size:12px;color:#aeb7bf}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.badge{background:#202b32;border-radius:12px;padding:10px;text-align:center;font-size:12px}.badge.locked{opacity:.4}
+.capture-meter{height:10px;background:#303b40;border-radius:99px;overflow:hidden;margin:8px 0}.capture-meter i{display:block;height:100%;background:#9cff57}
+.move-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.move{background:#27343b;border:1px solid #3d4d55;border-radius:12px;padding:11px;color:#fff;text-align:left}
+.move b{display:block}.move span{font-size:11px;opacity:.75}
+.battle-team{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.team-chip{min-width:80px;background:#202b32;border:1px solid #3b4a51;border-radius:12px;padding:7px;text-align:center;font-size:11px}.team-chip.active{border-color:#9cff57}
+.log{min-height:54px}
+
+</style>
+</head>
+<body>
+<div class="game" id="menu">
+  <div class="logo"><h1>PORTAL<br>MORTYS</h1><p>DIMENSIONES • CAPTURA • COMBATE</p><div class="portal"></div></div>
+  <div class="panel"><div class="topbar"><span class="pill">⭐ Nv. <b id="menuLevel">1</b></span><span class="pill">💰 <b id="menuCoins">150</b></span><span class="pill">🧪 <b id="menuCount">1/6</b></span></div><div class="small">Entrenador • <span id="menuXP">0/100 XP</span></div></div>
+  <div class="buttons">
+   <button class="btn" onclick="play()">📍 JUGAR / EXPLORAR</button>
+   <div class="menu-grid">
+    <button class="btn secondary" onclick="show('collection')">🧪 MIS MORTYS</button>
+    <button class="btn secondary" onclick="show('shop')">🏪 TIENDA</button>
+    <button class="btn secondary" onclick="show('quests')">📜 MISIONES</button>
+    <button class="btn secondary" onclick="show('badges')">🏅 MEDALLAS</button>
+   </div>
+   <button class="btn secondary" onclick="show('settings')">⚙️ AJUSTES</button>
+  </div>
+  <div class="footer">PROTOTIPO 0.7 • HECHO PARA MÓVIL</div>
+</div>
+<div id="screen"><button class="back" onclick="back()">← VOLVER</button><div class="card" id="content"></div></div>
+<script>
+function refreshMenu(){
+ const l=document.getElementById('menuLevel');if(l)l.textContent=state.trainerLevel;
+ const c=document.getElementById('menuCoins');if(c)c.textContent=state.coins;
+ const m=document.getElementById('menuCount');if(m)m.textContent=state.mortys.length+'/6';
+ const x=document.getElementById('menuXP');if(x)x.textContent=state.trainerXP+'/'+(100+(state.trainerLevel-1)*100)+' XP';
+}
+const oldSave=save; save=function(){oldSave();refreshMenu()};
+refreshMenu();
+</script>
+</body>
+/body>
+</html>
